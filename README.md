@@ -1,67 +1,67 @@
-# sales-cli — Advanced Sales Report Generator
+# sales-cli — Gerador Avançado de Relatórios de Vendas
 
-A Python CLI that reads a sales CSV file and generates a report with:
+Uma CLI em Python que lê um arquivo CSV de vendas e gera um relatório com:
 
-- total sales per product;
-- grand total value;
-- top-selling product;
-- filtering by date range.
+- total de vendas por produto;
+- valor total geral;
+- produto mais vendido;
+- filtragem por intervalo de datas.
 
-The output can be a readable text table (`--format text`) or JSON (`--format json`).
+A saída pode ser uma tabela de texto legível (`--format text`) ou JSON (`--format json`).
 
-## Requirements
+## Requisitos
 
-- Python **3.10 or newer**
-- [uv](https://docs.astral.sh/uv/) to manage the environment and dependencies
-- No runtime dependencies (standard library only)
-- Development dependencies (`pytest`, `pytest-cov`, `mypy`) are declared in the `dev` dependency group
+- Python **3.10 ou superior**
+- [uv](https://docs.astral.sh/uv/) para gerenciar o ambiente e as dependências
+- Nenhuma dependência de execução (apenas a biblioteca padrão)
+- As dependências de desenvolvimento (`pytest`, `pytest-cov`, `mypy`) são declaradas no grupo de dependências `dev`
 
-## Installation
+## Instalação
 
-From the project root, create the environment and install the project with its development dependencies:
+A partir da raiz do projeto, crie o ambiente e instale o projeto com suas dependências de desenvolvimento:
 
 ```bash
 uv sync
 ```
 
-`uv` creates the `.venv/` directory automatically and installs the project in editable mode.
+O `uv` cria o diretório `.venv/` automaticamente e instala o projeto em modo editável.
 
-To install the `sales-cli` command globally, without activating any environment:
+Para instalar o comando `sales-cli` globalmente, sem ativar nenhum ambiente:
 
 ```bash
 uv tool install .
 sales-cli --help
 ```
 
-To run the command from the project without installing it globally:
+Para executar o comando a partir do projeto sem instalá-lo globalmente:
 
 ```bash
 uv run sales-cli --help
 ```
 
-## Development
+## Desenvolvimento
 
 ```bash
-uv run pytest      # tests with coverage (minimum 80%)
-uv run mypy        # strict type checking
+uv run pytest      # testes com cobertura (mínimo de 80%)
+uv run mypy        # verificação de tipos em modo estrito
 ```
 
-## CSV format
+## Formato do CSV
 
-The file must be UTF-8 (a BOM is accepted) and contain the header below, in any column order:
+O arquivo deve estar em UTF-8 (um BOM é aceito) e conter o cabeçalho abaixo, em qualquer ordem de colunas:
 
-| Column           | Type                              | Example      |
-|------------------|-----------------------------------|--------------|
-| `data`           | Date in `YYYY-MM-DD` format       | `2025-01-05` |
-| `produto`        | Non-empty text                    | `Notebook`   |
-| `quantidade`     | Non-negative integer              | `2`          |
-| `valor_unitario` | Non-negative decimal, dot separator | `4500.00`  |
+| Coluna           | Tipo                                      | Exemplo      |
+|------------------|-------------------------------------------|--------------|
+| `data`           | Data no formato `AAAA-MM-DD`              | `2025-01-05` |
+| `produto`        | Texto não vazio                           | `Notebook`   |
+| `quantidade`     | Inteiro não negativo                      | `2`          |
+| `valor_unitario` | Decimal não negativo, com ponto como separador | `4500.00` |
 
-Header names are normalized (spaces and letter case are ignored). Extra columns cause an error.
+Os nomes do cabeçalho são normalizados (espaços e maiúsculas/minúsculas são ignorados). Colunas extras geram erro.
 
-> The column names are kept in Portuguese on purpose, so existing CSV files keep working.
+> Os nomes das colunas foram mantidos em português de propósito, para que os arquivos CSV existentes continuem funcionando.
 
-Example (`examples/vendas.csv`):
+Exemplo (`examples/vendas.csv`):
 
 ```csv
 data,produto,quantidade,valor_unitario
@@ -76,23 +76,23 @@ data,produto,quantidade,valor_unitario
 2025-06-01,Monitor,2,1150.00
 ```
 
-## Usage
+## Uso
 
-General syntax:
+Sintaxe geral:
 
 ```text
-sales-cli CSV [--format {text,json}] [--start YYYY-MM-DD] [--end YYYY-MM-DD] [--log-level LEVEL]
+sales-cli CSV [--format {text,json}] [--start YYYY-MM-DD] [--end YYYY-MM-DD] [--log-level NÍVEL]
 ```
 
-| Option        | Description                                                  | Default   |
-|---------------|--------------------------------------------------------------|-----------|
-| `CSV`         | Path to the sales CSV file                                   | —         |
-| `--format`    | Output format: `text` (table) or `json`                      | `text`    |
-| `--start`     | Start date of the filter (inclusive)                         | —         |
-| `--end`       | End date of the filter (inclusive)                           | —         |
-| `--log-level` | Log level on stderr: `DEBUG`, `INFO`, `WARNING`, `ERROR`     | `WARNING` |
+| Opção         | Descrição                                                         | Padrão    |
+|---------------|-------------------------------------------------------------------|-----------|
+| `CSV`         | Caminho para o arquivo CSV de vendas                              | —         |
+| `--format`    | Formato de saída: `text` (tabela) ou `json`                       | `text`    |
+| `--start`     | Data inicial do filtro (inclusiva)                                | —         |
+| `--end`       | Data final do filtro (inclusiva)                                  | —         |
+| `--log-level` | Nível de log no stderr: `DEBUG`, `INFO`, `WARNING`, `ERROR`       | `WARNING` |
 
-### Example 1: text report
+### Exemplo 1: relatório em texto
 
 ```bash
 $ sales-cli examples/vendas.csv --format text
@@ -116,7 +116,7 @@ TOTAL           48  R$ 25.419,50
 Top-selling product: Mouse (25 units)
 ```
 
-### Example 2: JSON report with a date filter
+### Exemplo 2: relatório em JSON com filtro de data
 
 ```bash
 $ sales-cli examples/vendas.csv --format json --start 2025-01-01 --end 2025-03-31
@@ -161,65 +161,65 @@ $ sales-cli examples/vendas.csv --format json --start 2025-01-01 --end 2025-03-3
 }
 ```
 
-Monetary values in JSON are strings with two decimal places, to avoid floating-point rounding errors.
+Os valores monetários em JSON são strings com duas casas decimais, para evitar erros de arredondamento de ponto flutuante.
 
-### Logs and exit codes
+### Logs e códigos de saída
 
-- The report is written to **stdout** and logs go to **stderr**, so the output can be redirected safely (`> report.json`).
-- Use `--log-level INFO` or `--log-level DEBUG` to follow the execution flow.
+- O relatório é escrito na **stdout** e os logs vão para a **stderr**, então a saída pode ser redirecionada com segurança (`> report.json`).
+- Use `--log-level INFO` ou `--log-level DEBUG` para acompanhar o fluxo de execução.
 
-| Code | Meaning                                                                  |
-|------|--------------------------------------------------------------------------|
-| `0`  | Report generated successfully (including when no sales match the period) |
-| `1`  | Runtime error: missing file, malformed CSV or invalid data               |
-| `2`  | Usage error: invalid argument, malformed date or inverted period         |
+| Código | Significado                                                                                  |
+|--------|----------------------------------------------------------------------------------------------|
+| `0`    | Relatório gerado com sucesso (inclusive quando nenhuma venda corresponde ao período)         |
+| `1`    | Erro de execução: arquivo ausente, CSV malformado ou dados inválidos                         |
+| `2`    | Erro de uso: argumento inválido, data malformada ou período invertido                        |
 
-## Tests
+## Testes
 
 ```bash
 uv run pytest
 ```
 
-The pytest settings live in `[tool.pytest.ini_options]` in `pyproject.toml`. They enable a coverage report and require **at least 80%** coverage of `src/sales_cli`.
+As configurações do pytest ficam em `[tool.pytest.ini_options]` no `pyproject.toml`. Elas habilitam o relatório de cobertura e exigem **no mínimo 80%** de cobertura de `src/sales_cli`.
 
-The package can also be run as a module:
+O pacote também pode ser executado como módulo:
 
 ```bash
 uv run python -m sales_cli.main examples/vendas.csv
 ```
 
-## Type checking
+## Verificação de tipos
 
 ```bash
 uv run mypy
 ```
 
-The configuration uses `strict = true` (see `pyproject.toml`).
+A configuração usa `strict = true` (veja `pyproject.toml`).
 
-## Project structure
+## Estrutura do projeto
 
 ```text
 .
 ├── examples/
-│   └── vendas.csv          # Sample input file
+│   └── vendas.csv          # Arquivo de entrada de exemplo
 ├── src/
 │   └── sales_cli/
-│       ├── __init__.py          # Package version
-│       ├── main.py              # Composition root: builds dependencies and runs the CLI
-│       ├── cli/                 # Presentation layer
-│       │   ├── app.py           # Application flow (receives service and renderers)
-│       │   ├── arguments.py     # argparse definition and validation
-│       │   ├── logs.py          # Logging configuration
-│       │   └── output.py        # Text table and JSON renderers
-│       ├── core/                # Business rules (no I/O)
+│       ├── __init__.py          # Versão do pacote
+│       ├── main.py              # Raiz de composição: monta as dependências e executa a CLI
+│       ├── cli/                 # Camada de apresentação
+│       │   ├── app.py           # Fluxo da aplicação (recebe o serviço e os renderizadores)
+│       │   ├── arguments.py     # Definição e validação do argparse
+│       │   ├── logs.py          # Configuração de logs
+│       │   └── output.py        # Renderizadores de tabela de texto e JSON
+│       ├── core/                # Regras de negócio (sem I/O)
 │       │   ├── models.py        # Sale, ProductSummary, Report
-│       │   ├── ports.py         # SalesSource interface (Protocol)
-│       │   ├── rules.py         # Period validation, filtering, totals per product
-│       │   └── service.py       # ReportService (receives a SalesSource)
-│       ├── errors/              # Application-specific exceptions
-│       ├── parsers/             # Input adapters
-│       │   └── csv_reader.py    # CsvSalesReader (implements SalesSource)
-│       └── py.typed             # Marks the package as typed (PEP 561)
+│       │   ├── ports.py         # Interface SalesSource (Protocol)
+│       │   ├── rules.py         # Validação de período, filtragem, totais por produto
+│       │   └── service.py       # ReportService (recebe um SalesSource)
+│       ├── errors/              # Exceções específicas da aplicação
+│       ├── parsers/             # Adaptadores de entrada
+│       │   └── csv_reader.py    # CsvSalesReader (implementa SalesSource)
+│       └── py.typed             # Marca o pacote como tipado (PEP 561)
 ├── tests/
 │   ├── conftest.py
 │   ├── test_cli.py
@@ -231,6 +231,6 @@ The configuration uses `strict = true` (see `pyproject.toml`).
 └── README.md
 ```
 
-## License
+## Licença
 
 MIT
