@@ -5,7 +5,7 @@ format:
 	@uv run ruff format .
 
 mypy-check:
-	@mypy --config-file=pyproject.toml .
+	@uv run mypy
 
 unit-tests:
 	@uv run pytest -vvv --cov=src --cov-report=term-missing

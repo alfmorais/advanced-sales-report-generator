@@ -177,7 +177,7 @@ Os valores monetários em JSON são strings com duas casas decimais, para evitar
 ## Testes
 
 ```bash
-uv run pytest
+uv run pytest -v --cov=reportß
 ```
 
 As configurações do pytest ficam em `[tool.pytest.ini_options]` no `pyproject.toml`. Elas habilitam o relatório de cobertura e exigem **no mínimo 80%** de cobertura de `src/sales_cli`.
